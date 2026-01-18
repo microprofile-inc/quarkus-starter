@@ -24,11 +24,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.commons/commons-beanutils2
     implementation 'org.apache.commons:commons-beanutils2:2.0.0-M2'
     implementation("org.projectlombok:lombok:1.18.42")
-    // https://mvnrepository.com/artifact/com.aliyun/dysmsapi20170525
-    implementation 'com.aliyun:dysmsapi20170525:4.3.1'
 
     // https://mvnrepository.com/artifact/com.fasterxml.woodstox/woodstox-core
-    implementation 'com.fasterxml.woodstox:woodstox-core:7.1.1'
+    // implementation 'com.fasterxml.woodstox:woodstox-core:7.1.1'
 
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
