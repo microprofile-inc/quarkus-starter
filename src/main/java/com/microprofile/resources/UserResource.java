@@ -4,7 +4,6 @@ import com.microprofile.constants.ResultMessage;
 import com.microprofile.entities.User;
 import com.microprofile.payload.ResultOfData;
 import com.microprofile.payload.UpdateUser;
-import com.microprofile.payload.UpdateUserPassword;
 import com.microprofile.repositorys.UserRepository;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
