@@ -34,8 +34,11 @@ fi
 
 # prepare exclude patterns
 EXCLUDE='*/.git/* */build/* */target/* */.gradle/* */out/*'
-# build find command and collect files
-mapfile -d '' FILES < <(find "$DIR" \( -path '*/.git' -o -path '*/build' -o -path '*/target' -o -path '*/.gradle' -o -path '*/out' \) -prune -o -type f -print0)
+# build find command and collect files (macOS/zsh兼容，无mapfile)
+FILES=()
+while IFS= read -r -d '' file; do
+  FILES+=("$file")
+done < <(find "$DIR" \( -path '*/.git' -o -path '*/build' -o -path '*/target' -o -path '*/.gradle' -o -path '*/out' \) -prune -o -type f -print0)
 
 # filter by extensions if provided
 if [[ -n "$EXTS" ]]; then
@@ -43,7 +46,10 @@ if [[ -n "$EXTS" ]]; then
   FILTERED=()
   for f in "${FILES[@]}"; do
     for e in "${ARR[@]}"; do
-      if [[ "${f,,}" == *".${e,,}" ]]; then
+      # macOS bash 没有 ,小写转换，使用 tr 兼容
+      f_lc="$(echo "$f" | tr 'A-Z' 'a-z')"
+      e_lc="$(echo "$e" | tr 'A-Z' 'a-z')"
+      if [[ "$f_lc" == *.${e_lc} ]]; then
         FILTERED+=("$f")
         break
       fi
@@ -71,7 +77,8 @@ if $DRY_RUN; then
   echo "---- DRY RUN: showing matches ----"
   for f in "${MATCHES[@]}"; do
     echo "File: $f"
-    grep -n --color=never -F -- "$OLD" "$f" || true
+    # macOS grep 没有 --color=never，直接用 grep -n -F
+    grep -n -F -- "$OLD" "$f" || true
   done
   exit 0
 fi
@@ -84,12 +91,14 @@ fi
 # export for perl to access
 export OLD NEW
 
+
+# macOS perl -i 需要 -i'' 代表不备份
 COUNT=0
 for f in "${MATCHES[@]}"; do
   if $BACKUP; then
     perl -0777 -i.bak -pe 'BEGIN{$r=$ENV{"NEW"}; $r =~ s/\\/\\\\/g;} s/\Q$ENV{"OLD"}\E/$r/g' -- "$f"
   else
-    perl -0777 -i -pe 'BEGIN{$r=$ENV{"NEW"}; $r =~ s/\\/\\\\/g;} s/\Q$ENV{"OLD"}\E/$r/g' -- "$f"
+    perl -0777 -i'' -pe 'BEGIN{$r=$ENV{"NEW"}; $r =~ s/\\/\\\\/g;} s/\Q$ENV{"OLD"}\E/$r/g' -- "$f"
   fi
   ((COUNT++))
 done
