@@ -95,36 +95,4 @@ public class UserResource {
             .entity(new ResultOfData<>(data).message(ResultMessage.UPDATE_SUCCESS))
             .build();
     }
-
-    @Tag(name = "User", description = "update User password")
-    @Operation(summary = "Update User Password")
-    @APIResponse(
-        responseCode = "200",
-        description = "update successful",
-        content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(
-                implementation = ResultOfData.class
-            )
-        )
-    )
-    @PUT
-    @Path("updatePassword")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    @RolesAllowed({"User"})
-    public Response updatePassword(@Valid UpdateUserPassword data) throws InvocationTargetException, IllegalAccessException {
-        var error = this.userRepository.updatePassword(data);
-        if(error == null) {
-            return Response
-                .status(Response.Status.OK)
-                .entity(new ResultOfData<>(data).message(ResultMessage.UPDATE_SUCCESS))
-                .build();
-        } else {
-            return Response
-                .status(Response.Status.FORBIDDEN)
-                .entity(error)
-                .build();
-        }
-    }
 }

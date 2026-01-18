@@ -1,7 +1,6 @@
 package com.microprofile.repositorys;
 
 import com.microprofile.entities.User;
-import com.microprofile.utils.SecurityTools;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Sort;
 import jakarta.enterprise.context.ApplicationScoped;
