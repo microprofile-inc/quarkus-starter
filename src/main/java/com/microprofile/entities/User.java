@@ -88,10 +88,6 @@ public class User extends PanacheEntityBase {
     @Schema(description = "password")
     public String password;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = true)
-    @Schema(description = "User country code")
-    public CountryCode countryCode;
-
     @Column(unique = true, length = 32)
     @Size(min = 4, max = 11)
     @Schema(description = "phoneNumber", required = true)
@@ -112,15 +108,6 @@ public class User extends PanacheEntityBase {
     @NaturalId
     @Schema(description = "email")
     public String email;
-
-    @OneToOne(
-        mappedBy = "user",
-        cascade = CascadeType.ALL,
-        fetch = FetchType.EAGER,
-        orphanRemoval = true
-    )
-    @Schema(description = "token")
-    public UserToken token = null;
 
     @CreationTimestamp
     @Schema(description = "when created", required = true)
